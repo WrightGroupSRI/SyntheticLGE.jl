@@ -1,0 +1,13 @@
+name = "SyntheticLGE"
+uuid = "8bb4aab0-0619-4fe5-8de9-681bab176a63"
+authors = ["Calder Sheagren <caldersheagren@gmail.com> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
