@@ -1,5 +1,6 @@
 module SyntheticLGE
 
-# Write your package code here.
+export IR
+include("IR.jl")
 
 end
