@@ -8,6 +8,7 @@ DICOM = "a26e6606-dd52-5f6a-a97f-4f611373d757"
 LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
 
 [compat]
+LsqFit = "0.13"
 julia = "1"
 
 [extras]
