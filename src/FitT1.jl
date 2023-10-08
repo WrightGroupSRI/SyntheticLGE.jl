@@ -16,44 +16,55 @@ import Base.Threads.@threads
 
 include("IR.jl")
 
-function IR(t, p)
-    
-    Mss, T1 = p
-    
-    return abs.(Mss .* (1 .- 2 .* exp.(-t ./ T1)))
-end
-
-function FitT1(TI, arr)
+function FitT1(TI, T1w, num_params)
     # TODO write testing code
-    (sx, sy, sz, st) = size(arr)
+    (sx, sy, sz, st) = size(T1w)
     M0_fit = zeros(Float64, (sx, sy, sz))
     T1_fit = zeros(Float64, (sx, sy, sz))
 
-    p0 = [0.5, 1]
+    T1w = (T1w .- minimum(T1w)) ./ (maximum(T1w) - minimum(T1w))
 
     @threads for i in 1:size(M0_fit, 1)
         @threads for j in 1:size(M0_fit, 2)
             @threads for k in 1:size(M0_fit, 3)
-                try
+		    try
 
-                    o = curve_fit(IR, TI, arr[i, j, k, :], p0)
-		    m, T = coef(o)
-		    # TODO: look at quality of fit and set bad fits equal to 0
-		    # TODO: one-parameter fit using M0
-                    M0_fit[i, j, k] = m
-                    T1_fit[i, j, k] = T
+			    if num_params == 2
+				p0 = [0.5, 1000]
+				f = IR_2p
+			    elseif num_params == 3
+				p0 = [0.5, 1, 1000]
+				f = IR_3p
+			    else
+				throw(DomainError(num_params, "must be 2 or 3"))
+			    end
+				
 
-                catch e
+			    o = curve_fit(f, TI[k, :], T1w[i, j, k, :], p0)
+			    out = coef(o)
+			    m = out[1]
+			    if num_params == 2
+				    T = out[2]
+			    elseif num_params == 3
+				    T = out[3]
+			    end
 
-                    continue
-                    # sets M0 = 0, T1 = 0
+			    # TODO: look at quality of fit and set bad fits equal to 0
+			    # TODO: one-parameter fit using M0
+			    M0_fit[i, j, k] = m
+			    T1_fit[i, j, k] = T
+		    catch e
+
+			    continue
+			    # sets M0 = 0, T1 = 0
 
                 end
 
             end
         end   
     end
-    
+
     return M0_fit, T1_fit
     
 end
+

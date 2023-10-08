@@ -20,11 +20,12 @@ using MIRTjim: jim
 """
 Read dicom from path
 """
+
 function dcmread(path::String) 
 
     dcm_data = dcm_parse(path)
 
-    return dcm_data[tag"Pixel Data"]
+    return dcm_data
 
 end
 
