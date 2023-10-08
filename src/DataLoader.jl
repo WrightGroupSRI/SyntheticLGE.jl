@@ -38,7 +38,20 @@ function DataLoader(multicontrast_path, T1_path)
 	num_contrasts = floor(Int64, num_images / num_slices)
 
 	T1w_sort = zeros(shx, shy, num_slices, num_contrasts)
-	# TODO sort images
+
+	for i = 1:num_images
+
+		a = mod(i, num_slices) 
+
+		if a == 0
+			a = 5
+		end
+
+		b = ceil(Int64, i / num_slices) 
+
+		T1w_sort[:, :, a, b] = T1w_images[:, :, i]
+
+	end
 
 	T1_map = zeros(shx, shy, num_slices)
 
@@ -50,7 +63,9 @@ function DataLoader(multicontrast_path, T1_path)
 
 end
 
-path = "/home/calder/Infrastructure/Data/DHC-2ABJ9_033Y/series0001-Body/"
+T1w_path = "/home/calder/Infrastructure/Data/DHC-2ABJ9_033Y/series0062-Body/"
+T1map_path = "/home/calder/Infrastructure/Data/DHC-2ABJ9_033Y/series0063-Body/"
 
-DataLoader(path, path)
+T1w, T1map = DataLoader(T1w_path, T1map_path)
+print(size(T1w), size(T1map))
 
