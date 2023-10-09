@@ -14,7 +14,12 @@ end
 
 function IR_3p(TI, p)
     
+	return abs.(p[1] .- p[2] .* exp.(-TI ./ p[3]))
+end
+
+function IR_3p_PSIR(TI, p)
+    
     A, B, T1 = p
     
-    return abs.(A .- B .* exp.(-TI ./ T1))
+    return A .- B .* exp.(-TI ./ T1)
 end
