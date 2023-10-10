@@ -16,7 +16,7 @@ import Base.Threads.@threads
 
 include("IR.jl")
 
-function FitT1(TI, T1w, num_params)
+function FitT1(TI, T1w; num_params:Int16=2)
     # TODO write testing code
     (sx, sy, sz, st) = size(T1w)
     M0_fit = zeros(Float64, (sx, sy, sz))
@@ -32,10 +32,8 @@ function FitT1(TI, T1w, num_params)
 
 			    if num_params == 2
 				p0 = [0.5, 1000]
-				f = IR_2p
 			    elseif num_params == 3
 				p0 = [T1w[i, j, k, size(T1w, 4)], 2, 1000]
-				f = IR_3p
 				lower = [0.0, 0.0, 0.0]
 				upper = [1.0, 4.0, 3000.0]
 			    else
@@ -43,7 +41,7 @@ function FitT1(TI, T1w, num_params)
 			    end
 				
 
-			    o = curve_fit(f, TI[k, :], T1w[i, j, k, :], p0, lower=lower, upper=upper)
+			    o = curve_fit(IR, TI[k, :], T1w[i, j, k, :], p0, lower=lower, upper=upper)
 			    out = coef(o)
 			    m = out[1]
 			    if num_params == 2
