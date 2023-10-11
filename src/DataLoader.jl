@@ -26,7 +26,7 @@ function DataLoader(multicontrast_path, T1_path)
 
 	num_images = size(T1w_image_path, 1)
 	T1w_images = zeros(shx, shy, num_images)
-	TIs = zeros(num_images)
+	TIs = zeros(Int64, num_images)
 
 	for i = 1:num_images
 
@@ -46,7 +46,7 @@ function DataLoader(multicontrast_path, T1_path)
 
 	T1w_sort = zeros(shx, shy, num_slices, num_contrasts)
 
-	TI_sort = zeros(num_slices, num_contrasts)
+	TI_sort = zeros(Int64, num_slices, num_contrasts)
 
 	for i = 1:num_images
 
@@ -60,7 +60,7 @@ function DataLoader(multicontrast_path, T1_path)
 
 		T1w_sort[:, :, a, b] = T1w_images[:, :, i]
 
-		TI_sort[a, b] = TIs[i]
+		TI_sort[a, b] = Int64(TIs[i])
 
 	end
 

@@ -11,39 +11,39 @@
 ###############################################################
 
 """
-function IR(TI::Float64, p::Vector{Float64}; PSIR::Bool=false)
+function IR(TI::Float64, p::Vector{Array{Float64, 3}}; PSIR::Bool=false)
 
-p = [T1]
-IR(TI, T1) = 1 - 2exp(-TI/T1)
+PSIR = True:
+return |IR(TI, p)|
 
-p = [M0, T1]
-IR(TI, M0, T1) = M0 - 2M0exp(-TI/T1)
+PSIR = False:
+return IR(TI, p)
 
-p = [M0, T1, B]
-IR(TI, M0, T1, B) = M0 - Bexp(-TI/T1)
-
-PSIR = false
-Absolute value taken
-
-PSIR = true
-No absolute value taken
+Used for generation of T1w images from parametric maps
 """
-function IR(TI::Float64, p::Vector{Float64}; PSIR::Bool=false)
+function IR(TI::Int64, p::Vector{Array{Float64, 3}}; PSIR::Bool=false)
 
-	if size(p) == 1
+	if size(p)[1] == 1
+
+		println("1 parameter fit")
 
 		T1 = p[1]
 
 		if PSIR
+
+			println("PSIR reconstruction")
 			
 			return 1 .- 2 .* exp.(-TI ./ T1)
 
 		else 
+
+			println("Magnitude reconstruction")
+			
 			return abs.(1 .- 2 .* exp.(-TI ./ T1))
 
 		end
 
-	elseif size(p) == 2
+	elseif size(p)[1] == 2
 
 		Mss, T1 = p
 
@@ -58,20 +58,62 @@ function IR(TI::Float64, p::Vector{Float64}; PSIR::Bool=false)
 
 		end
 	    
-	elseif size(p) == 3
+	elseif size(p)[1] == 3
 
-		Mss, T1, B = p
+		M0, T1, B = p
 
 		if PSIR
 
-			return A .- B .* exp.(-TI ./ T1)
+			return M0 .- B .* exp.(-TI ./ T1)
 
 		else
 
-			return abs.(A .- B .* exp.(-TI ./ T1))
+			return abs.(M0 .- B .* exp.(-TI ./ T1))
 
 		end
 
 	end
+
+	return 0
+    
+end
+
+"""
+function IR(TI::Vector{Int64}, p::Vector{Float64})
+
+p = [T1]
+IR(TI, T1) = 1 - 2exp(-TI/T1)
+
+p = [M0, T1]
+IR(TI, M0, T1) = M0 - 2M0exp(-TI/T1)
+
+p = [M0, T1, B]
+IR(TI, M0, T1, B) = M0 - Bexp(-TI/T1)
+
+Used for T1 fitting
+"""
+function IR(TI::Vector{Int64}, p::Vector{Float64})
+
+	if size(p)[1] == 1
+
+		T1 = p[1]
+			
+		return abs.(1 .- 2 .* exp.(-TI ./ T1))
+
+	elseif size(p)[1] == 2
+
+		Mss, T1 = p
+
+		return abs.(Mss .* (1 .- 2 .* exp.(-TI ./ T1)))
+
+	elseif size(p)[1] == 3
+
+		M0, T1, B = p
+
+		return abs.(M0 .- B .* exp.(-TI ./ T1))
+
+	end
+
+	return 0
     
 end
