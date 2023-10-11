@@ -14,7 +14,14 @@ include("DicomUtils.jl")
 using Glob
 using MIRTjim: jim
 
-function DataLoader(multicontrast_path, T1_path)
+"""
+function DataLoader(multicontrast_path::String, T1_path::String)
+
+Arguments: 
+multicontrast_path: path to T1w data, sorted by contrast (i.e. full volume for contrast 1, full volume for contrast 2, ...) 
+T1_path: path to scanner-generated T1 maps
+"""
+function DataLoader(multicontrast_path::String, T1_path::String)
 
 	T1w_image_path = sort(glob("*.dcm", multicontrast_path))
 	T1_map_path = sort(glob("*.dcm", T1_path))

@@ -11,16 +11,11 @@
 # Modified: October 2, 2023
 ###############################################################
 
-export dcmread, dcmwrite
-
 using DICOM
-using Plots
-using MIRTjim: jim
 
 """
 Read dicom from path
 """
-
 function dcmread(path::String) 
 
     dcm_data = dcm_parse(path)
@@ -32,17 +27,18 @@ end
 """
 Write 2D array to dicom at dest path using reference dicom at ref_path
 """
-function dcmwrite(array, dest_path::String, ref_path::String)
+function dcmwrite(array; destination_path::String=nothing, reference_path::String=nothing)
 
-    data = dcm_parse(ref_path)
+	@assert !isnothing(destination_path) # need inputs
+	@assert !isnothing(reference_path) # need inputs
+
+    data = dcm_parse(reference_path)
 
     vr = data.vr
 
-    # TODO fix data type input issue
-    # TODO make a (deep) copy of data
-    data[tag"Pixel Data"] = array
+    data[tag"Pixel Data"] = Int16.(array)
 
-    dcm_write(dest_path, data, aux_vr=vr)
+    dcm_write(destination_path, data, aux_vr=vr)
 
 end
 
