@@ -25,13 +25,13 @@ M0_3p, T1_3p, B_3p = FitT1(TI, T1w; num_params=3)
 
 LGE_2p = CreateLGE(300; M0=M0_2p, T1=T1_2p)
 
-LGE_2p_PSIR = CreateLGE(300; M0=M0_2p, T1=T1_2p; PSIR=true)
+LGE_2p_PSIR = CreateLGE(300; M0=M0_2p, T1=T1_2p, PSIR=true)
 
-LGE_3p = CreateLGE(300; M0=M0_3p, T1=T1_3p; B=B_3p)
+LGE_3p = CreateLGE(300; M0=M0_3p, T1=T1_3p, B=B_3p)
 
 LGE_3p_PSIR = CreateLGE(300; M0=M0_3p, T1=T1_3p, B=B_3p, PSIR=true)
 
-ExportLGE(LGE_2p_PSIR, reference_path=T1_path, destination_path=multicontrast_path)
+ExportLGE(LGE_2p_PSIR, reference_path=T1_path, destination_path="data/destination_path")
 
 jim(permutedims(LGE_2p, (2, 1, 3)))
 savefig("LGE_2p.png")
