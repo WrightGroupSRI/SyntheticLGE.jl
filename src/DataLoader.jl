@@ -27,7 +27,7 @@ Returns:
 function DataLoader(;multicontrast_path::String=nothing, T1_path::String=nothing)
 
 	@assert !isnothing(multicontrast_path) # need input
-	@assert !isnothing(T1_image_path) # need input
+	@assert !isnothing(T1_path) # need input
 
 	T1w_image_path = sort(glob("*.dcm", multicontrast_path))
 	T1_image_path = sort(glob("*.dcm", T1_path))
