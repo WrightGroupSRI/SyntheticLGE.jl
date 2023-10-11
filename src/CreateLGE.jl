@@ -12,12 +12,20 @@
 
 include("IR.jl")
 
-function CreateLGE(M0, T1, TI::Int64; B=nothing, PSIR::Bool=false)
+function CreateLGE(TI::Int64; M0=nothing, T1=nothing, B=nothing, PSIR::Bool=false)
 
-	if !isnothing(B)
+	@assert !isnothing(M0) # need input
+
+	@assert !isnothing(T1) # need output
+
+	if !isnothing(B) # either 2-parameter or 3-parameter fit
+
 		p = [M0, T1, B]
+
 	else
+
 		p = [M0, T1]
+
 	end
 
 	return IR(TI, p; PSIR=PSIR)
