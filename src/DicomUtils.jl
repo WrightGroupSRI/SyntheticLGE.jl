@@ -36,7 +36,7 @@ function dcmwrite(array; destination_path::String=nothing, reference_path::Strin
 
     vr = data.vr
 
-    data[tag"Pixel Data"] = Int16.(array)
+    data[tag"Pixel Data"] = Int16.(1000 .* array)
 
     dcm_write(destination_path, data, aux_vr=vr)
 
