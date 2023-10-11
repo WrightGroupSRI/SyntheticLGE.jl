@@ -30,10 +30,10 @@ function DataLoader(;multicontrast_path::String=nothing, T1_path::String=nothing
 	@assert !isnothing(T1_path) # need input
 
 	T1w_image_path = sort(glob("*.dcm", multicontrast_path))
-	T1_map_path = sort(glob("*.dcm", T1_path))
+	T1_path = sort(glob("*.dcm", T1_path))
 
 	T1w_image_size = size(dcmread(T1w_image_path[1])[tag"Pixel Data"])
-	T1_map_size = size(dcmread(T1_map_path[1])[tag"Pixel Data"])
+	T1_map_size = size(dcmread(T1_path[1])[tag"Pixel Data"])
 	@assert T1w_image_size == T1_map_size # maps and images should be same size
 	shx, shy = T1w_image_size
 
@@ -51,7 +51,7 @@ function DataLoader(;multicontrast_path::String=nothing, T1_path::String=nothing
 
 	end
 
-	num_slices = size(T1_map_path, 1)
+	num_slices = size(T1_path, 1)
 
 	@assert mod(num_images, num_slices) == 0 # number of images should be a multiple of number of slices
 
@@ -80,7 +80,7 @@ function DataLoader(;multicontrast_path::String=nothing, T1_path::String=nothing
 	T1_map = zeros(shx, shy, num_slices)
 
 	for i = 1:num_slices
-		T1_map[:, :, i] = dcmread(T1_map_path[i])[tag"Pixel Data"] 
+		T1_map[:, :, i] = dcmread(T1_path[i])[tag"Pixel Data"] 
 	end
 
 	return TI_sort, T1w_sort, T1_map
