@@ -16,3 +16,8 @@ calderds@raven ~                                                                
 > $ julia                                                                                             
 (@v1.9) pkg> add .
 ```
+To confirm the package works with sample data, run the following command. 
+
+```bash
+julia docs/example/RunLGE.jl
+```
