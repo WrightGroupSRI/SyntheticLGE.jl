@@ -24,7 +24,7 @@ T1_image_path: path to scanner-generated T1 maps
 Returns:
 [TI, T1w, T1map] (all from scanner images, no fitting done here)
 """
-function DataLoader(multicontrast_path::String; T1_path::String=nothing)
+function DataLoader(multicontrast_path::String; T1_path::Union{String, Nothing}=nothing)
 
 	@assert !isnothing(multicontrast_path) # need input
 
