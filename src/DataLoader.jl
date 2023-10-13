@@ -38,18 +38,22 @@ function DataLoader(multicontrast_path::String; T1_path::Union{String, Nothing}=
 	num_images = size(T1w_image_path, 1)
 	T1w_images = zeros(shx, shy, num_images)
 	TIs = zeros(Int64, num_images)
+	slices = zeros(Float64, num_images)
 
 	for i = 1:num_images
 
 		x = dcmread(T1w_image_path[i]) 
 
+
 		T1w_images[:, :, i] = x[tag"Pixel Data"] 
 
 		TIs[i] = x[tag"Inversion Time"] 
 
+		slices[i] = x[tag"Slice Location"]
+
 	end
 
-	num_slices = size(T1_image_path, 1)
+	num_slices = size(unique(slices), 1)
 
 	@assert mod(num_images, num_slices) == 0 # number of images should be a multiple of number of slices
 
