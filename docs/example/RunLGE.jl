@@ -17,7 +17,7 @@ using Plots: savefig
 multicontrast_path = "data/multicontrast_imgs"
 T1_path = "data/T1map_imgs"
 
-TI, T1w, _ = DataLoader(multicontrast_path; T1_path=T1_path)
+TI, T1w, _ = DataLoader(;multicontrast_path=multicontrast_path, T1_path=T1_path)
 
 M0_2p, T1_2p = FitT1(TI, T1w; num_params=2)
 

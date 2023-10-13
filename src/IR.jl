@@ -1,49 +1,119 @@
 #!/usr/bin/julia
 
 ###############################################################
-# RUN LGE
-# script to run synthetic LGE pipeline
+# IR.jl
+# function to model inversion-recovery data with various inputs 
 #
 # Calder Sheagren
 # University of Toronto
 # calder.sheagren@sri.utoronto.ca
-# Date: October 11, 2023
+# Date: October 10, 2023
 ###############################################################
 
-using SyntheticLGE: DataLoader, FitT1, CreateLGE, ExportLGE
-using MIRTjim: jim
-using Plots: savefig
+"""
+function IR(TI::Float64, p::Vector{Array{Float64, 3}}; PSIR::Bool=false)
 
-multicontrast_path = "data/multicontrast_imgs"
-T1_path = "data/T1map_imgs"
+PSIR = True:
+return |IR(TI, p)|
 
-TI, T1w, _ = DataLoader(multicontrast_path; T1_path=T1_path)
+PSIR = False:
+return IR(TI, p)
 
-M0_2p, T1_2p = FitT1(TI, T1w; num_params=2)
+Used for generation of T1w images from parametric maps
+"""
+function IR(TI::Int64, p::Vector{Array{Float64, 3}}; PSIR::Bool=false)
 
-M0_3p, T1_3p, B_3p = FitT1(TI, T1w; num_params=3)
+	if size(p)[1] == 1
 
-LGE_2p = CreateLGE(300; M0=M0_2p, T1=T1_2p)
+		println("1 parameter fit")
 
-LGE_2p_PSIR = CreateLGE(300; M0=M0_2p, T1=T1_2p, PSIR=true)
+		T1 = p[1]
 
-LGE_3p = CreateLGE(300; M0=M0_3p, T1=T1_3p, B=B_3p)
+		if PSIR
 
-LGE_3p_PSIR = CreateLGE(300; M0=M0_3p, T1=T1_3p, B=B_3p, PSIR=true)
+			println("PSIR reconstruction")
+			
+			return 1 .- 2 .* exp.(-TI ./ T1)
 
-ExportLGE(LGE_2p_PSIR, reference_path=T1_path, destination_path="data/destination_path")
+		else 
 
-jim(permutedims(LGE_2p, (2, 1, 3)))
-savefig("LGE_2p.png")
+			println("Magnitude reconstruction")
+			
+			return abs.(1 .- 2 .* exp.(-TI ./ T1))
 
-jim(permutedims(LGE_2p_PSIR, (2, 1, 3)))
-savefig("LGE_2p_PSIR.png")
+		end
 
-jim(permutedims(LGE_3p, (2, 1, 3)))
-savefig("LGE_3p.png")
+	elseif size(p)[1] == 2
 
-jim(permutedims(LGE_3p_PSIR, (2, 1, 3)))
-savefig("LGE_3p_PSIR.png")
+		Mss, T1 = p
+
+		if PSIR
+
+			return Mss .* (1 .- 2 .* exp.(-TI ./ T1))
+
+		else
+
+			return abs.(Mss .* (1 .- 2 .* exp.(-TI ./ T1)))
+
+
+		end
+	    
+	elseif size(p)[1] == 3
+
+		M0, T1, B = p
+
+		if PSIR
+
+			return M0 .- B .* exp.(-TI ./ T1)
+
+		else
+
+			return abs.(M0 .- B .* exp.(-TI ./ T1))
+
+		end
+
+	end
+
+	return 0
     
+end
 
+"""
+function IR(TI::Vector{Int64}, p::Vector{Float64})
 
+p = [T1]
+IR(TI, T1) = 1 - 2exp(-TI/T1)
+
+p = [M0, T1]
+IR(TI, M0, T1) = M0 - 2M0exp(-TI/T1)
+
+p = [M0, T1, B]
+IR(TI, M0, T1, B) = M0 - Bexp(-TI/T1)
+
+Used for T1 fitting
+"""
+function IR(TI::Vector{Int64}, p::Vector{Float64})
+
+	if size(p)[1] == 1
+
+		T1 = p[1]
+			
+		return abs.(1 .- 2 .* exp.(-TI ./ T1))
+
+	elseif size(p)[1] == 2
+
+		Mss, T1 = p
+
+		return abs.(Mss .* (1 .- 2 .* exp.(-TI ./ T1)))
+
+	elseif size(p)[1] == 3
+
+		M0, T1, B = p
+
+		return abs.(M0 .- B .* exp.(-TI ./ T1))
+
+	end
+
+	return 0
+    
+end
