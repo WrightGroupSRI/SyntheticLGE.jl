@@ -15,7 +15,7 @@ using Glob
 using MIRTjim: jim
 
 """
-function DataLoader(multicontrast_path::String, T1_image_path::String)
+function DataLoader(multicontrast_path::String; T1_path::String=nothing)
 
 Arguments: 
 multicontrast_path: path to T1w data, sorted by contrast (i.e. full volume for contrast 1, full volume for contrast 2, ...) 
@@ -24,7 +24,7 @@ T1_image_path: path to scanner-generated T1 maps
 Returns:
 [TI, T1w, T1map] (all from scanner images, no fitting done here)
 """
-function DataLoader(multicontrast_path::String=nothing; T1_path::String=nothing)
+function DataLoader(multicontrast_path::String; T1_path::String=nothing)
 
 	@assert !isnothing(multicontrast_path) # need input
 
