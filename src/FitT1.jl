@@ -30,8 +30,12 @@ function FitT1(TI, T1w; num_params::Int=2)
             @threads for k in 1:size(M0_fit, 3)
 		    try
 
-			    if num_params == 2
-				    p0 = [T1w[i, j, k, size(T1w, 4)], 1000]
+			    if num_params == 1
+				    p0 = [1000]
+				    lower = [0.]
+				    upper = [3000.0]
+			    elseif num_params == 2
+				    p0 = [T1w[i, j, k, size(T1w, 4)], 1000.0]
 				lower = [0.0, 0.0]
 				upper = [1.0, 3000.0]
 			    elseif num_params == 3
@@ -39,14 +43,20 @@ function FitT1(TI, T1w; num_params::Int=2)
 				lower = [0.0, 0.0, 0.0]
 				upper = [1.0, 3000.0, 4.0]
 			    else
-				throw(DomainError(num_params, "must be 2 or 3"))
+				throw(DomainError(num_params, "must be 1, 2, or 3"))
 			    end
 				
 
 			    o = curve_fit(IR, TI[k, :], T1w[i, j, k, :], p0, lower=lower, upper=upper)
 			    out = coef(o)
-			    m = out[1]
-			    T = out[2]
+			    if num_params == 1
+				    m = 1.
+				    T = out[1]
+			    else
+				    m = out[1]
+				    T = out[2]
+			    end
+
 			    if num_params == 3
 				    B_fit[i, j, k] = out[3]
 			    end
