@@ -14,7 +14,8 @@ In the Julia terminal, press the `]` key to enter the package installation envir
 ```julia
 calderds@raven ~                                                                            [11:32:38]
 > $ julia                                                                                             
-(@v1.9) pkg> add .
+(@v1.9) pkg> activate .
+(@v1.9) pkg> instantiate
 ```
 To confirm the package works with sample data, run the following command. 
 
