@@ -31,7 +31,7 @@ function FitT1(TI, T1w; num_params::Int=2)
 		    try
 
 			    if num_params == 1
-				    p0 = [1000]
+				    p0 = [1000.]
 				    lower = [0.]
 				    upper = [3000.0]
 			    elseif num_params == 2
@@ -61,12 +61,11 @@ function FitT1(TI, T1w; num_params::Int=2)
 				    B_fit[i, j, k] = out[3]
 			    end
 
-			    # TODO: look at quality of fit and set bad fits equal to 0
-			    # TODO: one-parameter fit using M0
 			    M0_fit[i, j, k] = m
 			    T1_fit[i, j, k] = T
 		    catch e
 
+			    # println(i, "", j, "", k, "", e)
 			    continue
 			    # sets M0 = 0, T1 = 0
 
