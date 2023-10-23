@@ -15,6 +15,8 @@ In the Julia terminal, press the `]` key to enter the package installation envir
 calderds@raven ~                                                                            [11:32:38]
 > $ julia                                                                                             
 (@v1.9) pkg> add .
+(@v1.9) pkg> add Plots
+(@v1.9) pkg> add MIRTjim
 ```
 To confirm the package works with sample data, run the following command. 
 
