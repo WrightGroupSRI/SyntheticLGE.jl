@@ -10,7 +10,7 @@
 # Date: October 14, 2023
 ###############################################################
 
-using SyntheticLGE: DataLoader, FitT1, CreateLGE, ExportLGE
+using SyntheticLGE: DataLoader, FitT1, CreateLGE, ExportLGE, norm
 using MIRTjim: jim
 using Plots: savefig
 
@@ -31,7 +31,7 @@ LGE_2p = CreateLGE(TI_choice; M0=M0_2p, T1=T1_2p)
 
 LGE_3p = CreateLGE(TI_choice; M0=M0_3p, T1=T1_3p, B=B_3p)
 
-function Prepare(Img, idx)
+function Prepare(Img, idx; vmax = 1)
 
 	Img_perm = permutedims(Img, (2, 1, 3))
 
@@ -44,7 +44,7 @@ function Prepare(Img, idx)
 	Img_idx = Img_perm[1 + cx - Int(idx[2] / 2):cx + Int(idx[2] / 2),
 			   1 + cy - Int(idx[1] / 2):cy + Int(idx[1] / 2), idx[3]]
 
-	return (Img_idx .- minimum(Img_idx)) / (maximum(Img_idx) - minimum(Img_idx))
+	return norm(Img_idx) ./ vmax
 
 end
 
@@ -77,6 +77,7 @@ jim([Prepare(LGE_1p_inp, idx),
      Prepare(flash_LGE_1p_inp, flash_idx),
      Prepare(flash_LGE_2p, flash_idx),
      Prepare(flash_LGE_3p, flash_idx)],
+    clim=(0., 0.4),
     dpi=900)
 
 savefig("FigureC.png")
