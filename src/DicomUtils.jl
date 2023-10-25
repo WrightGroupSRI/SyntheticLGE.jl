@@ -11,6 +11,7 @@
 # Modified: October 2, 2023
 ###############################################################
 
+include("utils.jl")
 using DICOM
 
 """
@@ -36,7 +37,9 @@ function dcmwrite(array; destination_path::String=nothing, reference_path::Strin
 
     vr = data.vr
 
-    data[tag"Pixel Data"] = Int16.(round.(1000 .* array))
+    array_norm = norm(array)
+
+    data[tag"Pixel Data"] = Int16.(round.(1000 .* array_norm))
 
     dcm_write(destination_path, data, aux_vr=vr)
 
