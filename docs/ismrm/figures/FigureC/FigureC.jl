@@ -72,11 +72,11 @@ idx = [ix, iy, 6]
 flash_idx = [ix, iy, 11]
 
 jim([Prepare(LGE_1p_inp, idx),
-     Prepare(LGE_2p, idx),
-     Prepare(LGE_3p, idx),
+     Prepare(LGE_2p, idx; vmax=0.4),
+     Prepare(LGE_3p, idx; vmax=0.5),
      Prepare(flash_LGE_1p_inp, flash_idx),
-     Prepare(flash_LGE_2p, flash_idx),
-     Prepare(flash_LGE_3p, flash_idx)],
+     Prepare(flash_LGE_2p, flash_idx; vmax=0.4),
+     Prepare(flash_LGE_3p, flash_idx); vmax=0.5],
     clim=(0., 0.4),
     dpi=900)
 

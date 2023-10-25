@@ -12,7 +12,6 @@
 
 include("DicomUtils.jl")
 using Glob
-using MIRTjim: jim
 
 """
 function DataLoader(multicontrast_path::String; T1_path::String=nothing)
