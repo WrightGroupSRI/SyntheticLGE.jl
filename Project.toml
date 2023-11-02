@@ -11,6 +11,7 @@ LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
 [compat]
 DICOM = "0.10"
 Glob = "1"
+LsqFit = "0.15"
 julia = "1"
 
 [extras]
