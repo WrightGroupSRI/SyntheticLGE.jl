@@ -1,7 +1,7 @@
 #!/usr/bin/julia
 
 ###############################################################
-# FIGURE C
+# FIGURE 4
 # Compare synthetic LGE images at different TIs 
 #
 # Calder Sheagren
@@ -12,9 +12,10 @@
 
 using SyntheticLGE: DataLoader, FitT1, CreateLGE, ExportLGE
 using MIRTjim: jim
-using Plots: savefig
+using Plots: plot!, savefig
 
 multicontrast_path = "../../../../data/flash/multicontrast_imgs"
+
 T1_path = "../../../../data/flash/T1map_imgs"
 
 TI, T1w, T1_inp = DataLoader(multicontrast_path; T1_path=T1_path)
@@ -25,7 +26,7 @@ TI_choices = [250, 300, 350, 400, 450, 500, 550]
 
 images = zeros(Float64, size(T1_2p, 2), size(T1_2p, 1), 2 * size(TI_choices, 1))
 
-idx = 5
+idx = 11
 
 for T in 1:size(TI_choices, 1)
 
@@ -43,11 +44,14 @@ for T in 1:size(TI_choices, 1)
 
 end
 
-
-
 jim(images,
     nrow=2,
     ncol=size(TI_choices, 1),
+    clim=(0, 0.5),
+    colorbar=:none,
+    title="SynLGE Images at Multiple Inversion Times",
     dpi=900)
 
-savefig("FigureD_Dev.png")
+plot!(size=(800, 300))
+
+savefig("Figure4.png")

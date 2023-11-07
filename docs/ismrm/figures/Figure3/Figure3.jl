@@ -1,7 +1,7 @@
 #!/usr/bin/julia
 
 ###############################################################
-# FIGURE C
+# FIGURE 3
 # Compare synthetic LGE images using different fitting techniques 
 #
 # Calder Sheagren
@@ -14,24 +14,7 @@ using SyntheticLGE: DataLoader, FitT1, CreateLGE, ExportLGE, norm
 using MIRTjim: jim
 using Plots: savefig
 
-multicontrast_path = "../../../../data/ssfp/multicontrast_imgs"
-T1_path = "../../../../data/ssfp/T1map_imgs"
-
-TI, T1w, T1_inp = DataLoader(multicontrast_path; T1_path=T1_path)
-
-@time M0_2p, T1_2p, _ = FitT1(TI, T1w; num_params=2)
-
-@time M0_3p, T1_3p, B_3p = FitT1(TI, T1w; num_params=3)
-
-TI_choice = 450
-
-LGE_1p_inp = CreateLGE(TI_choice; T1=T1_inp)
-
-LGE_2p = CreateLGE(TI_choice; M0=M0_2p, T1=T1_2p)
-
-LGE_3p = CreateLGE(TI_choice; M0=M0_3p, T1=T1_3p, B=B_3p)
-
-function Prepare(Img, idx; vmax = 1)
+function Prepare(Img, idx; vmax=1.0)
 
 	Img_perm = permutedims(Img, (2, 1, 3))
 
@@ -48,8 +31,26 @@ function Prepare(Img, idx; vmax = 1)
 
 end
 
+multicontrast_path = "../../../../data/ssfp/multicontrast_imgs"
+
+T1_path = "../../../../data/ssfp/T1map_imgs"
+
+TI, T1w, T1_inp = DataLoader(multicontrast_path; T1_path=T1_path)
+
+@time M0_2p, T1_2p, _ = FitT1(TI, T1w; num_params=2)
+
+@time M0_3p, T1_3p, B_3p = FitT1(TI, T1w; num_params=3)
+
+TI_choice = 450
+
+LGE_1p_inp = CreateLGE(TI_choice; T1=T1_inp)
+
+LGE_2p = CreateLGE(TI_choice; M0=M0_2p, T1=T1_2p)
+
+LGE_3p = CreateLGE(TI_choice; M0=M0_3p, T1=T1_3p, B=B_3p)
 
 flash_multicontrast_path = "../../../../data/flash/multicontrast_imgs"
+
 flash_T1_path = "../../../../data/flash/T1map_imgs"
 
 flash_TI, flash_T1w, flash_T1_inp = DataLoader(flash_multicontrast_path; T1_path=flash_T1_path)
@@ -60,15 +61,16 @@ flash_TI, flash_T1w, flash_T1_inp = DataLoader(flash_multicontrast_path; T1_path
 
 flash_LGE_1p_inp = CreateLGE(TI_choice; T1=flash_T1_inp)
 
-
 flash_LGE_2p = CreateLGE(TI_choice; M0=flash_M0_2p, T1=flash_T1_2p)
 
 flash_LGE_3p = CreateLGE(TI_choice; M0=flash_M0_3p, T1=flash_T1_3p, B=flash_B_3p)
 
 ix = minimum([size(flash_LGE_1p_inp, 1), size(LGE_1p_inp, 1)])
+
 iy = minimum([size(flash_LGE_1p_inp, 2), size(LGE_1p_inp, 2)])
 
 idx = [ix, iy, 6]
+
 flash_idx = [ix, iy, 11]
 
 jim([Prepare(LGE_1p_inp, idx),
@@ -76,8 +78,8 @@ jim([Prepare(LGE_1p_inp, idx),
      Prepare(LGE_3p, idx; vmax=0.5),
      Prepare(flash_LGE_1p_inp, flash_idx),
      Prepare(flash_LGE_2p, flash_idx; vmax=0.4),
-     Prepare(flash_LGE_3p, flash_idx); vmax=0.5],
-    clim=(0., 0.4),
+     Prepare(flash_LGE_3p, flash_idx; vmax=0.5)],
+    clim=(0., 1.0),
     dpi=900)
 
-savefig("FigureC.png")
+savefig("Figure3.png")

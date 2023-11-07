@@ -23,3 +23,5 @@ To confirm the package works with sample data, run the following command.
 ```bash
 julia docs/example/RunLGE.jl
 ```
+
+ISMRM abstract figures can be found in `docs/ismrm/figures/` (and may require external `Glob`, `DICOM` dependencies).
