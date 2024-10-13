@@ -53,6 +53,7 @@ function FitT1(TI, T1w; num_params::Int=2)
 
 			    if any(isnan, T1w[i, j, k, :])
 
+				    println("Nan detected at $i, $j, $k")
 				    continue
 				    # M0 = T1 = 0
 
