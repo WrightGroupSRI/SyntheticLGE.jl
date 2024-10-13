@@ -51,6 +51,13 @@ function FitT1(TI, T1w; num_params::Int=2)
 			    end
 				
 
+			    if any(isnan, T1w[i, j, k, :])
+
+				    continue
+				    # M0 = T1 = 0
+
+			    end 
+
 			    o = curve_fit(IR, TI[k, :], T1w[i, j, k, :], p0, lower=lower, upper=upper)
 			    out = coef(o)
 			    if num_params == 1
