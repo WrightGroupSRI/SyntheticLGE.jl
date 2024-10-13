@@ -23,7 +23,11 @@ function FitT1(TI, T1w; num_params::Int=2)
     T1_fit = zeros(Float64, (sx, sy, sz))
     B_fit = zeros(Float64, (sx, sy, sz))
 
-    T1w = (T1w .- minimum(T1w)) ./ (maximum(T1w) - minimum(T1w))
+    # T1w = (T1w .- minimum(T1w)) ./ (maximum(T1w) - minimum(T1w))
+    println(size(T1w), maximum(T1w), minimum(T1w))
+    T1w = T1w ./ T1w[:, :, :, end]
+    println(size(T1w), maximum(T1w), minimum(T1w))
+    println("PD normalization")
 
     @threads for i in 1:size(M0_fit, 1)
         @threads for j in 1:size(M0_fit, 2)
