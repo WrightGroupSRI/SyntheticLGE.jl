@@ -25,7 +25,8 @@ function FitT1(TI, T1w; num_params::Int=2)
 
     # T1w = (T1w .- minimum(T1w)) ./ (maximum(T1w) - minimum(T1w))
     println(size(T1w), maximum(T1w), minimum(T1w))
-    T1w = T1w ./ T1w[:, :, :, end]
+    PD = T1w[:, :, :, end]
+    T1w = T1w ./ PD 
     println(size(T1w), maximum(T1w), minimum(T1w))
     println("PD normalization")
 
@@ -64,7 +65,7 @@ function FitT1(TI, T1w; num_params::Int=2)
 				    m = 1.
 				    T = out[1]
 			    else
-				    m = out[1] * T1w[i, j, k, end]
+				    m = out[1] * PD[i, j, k, end]
 				    T = out[2]
 			    end
 
