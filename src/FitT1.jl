@@ -64,7 +64,7 @@ function FitT1(TI, T1w; num_params::Int=2)
 				    m = 1.
 				    T = out[1]
 			    else
-				    m = out[1]
+				    m = out[1] * T1w[i, j, k, end]
 				    T = out[2]
 			    end
 
